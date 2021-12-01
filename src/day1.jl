@@ -1,3 +1,4 @@
+using DSP
 
 function part1()
     s = [parse(Int, l) for l in eachline("input/day1/input")]
@@ -10,6 +11,12 @@ function part1()
         end
     end
     c
+end
+
+function part1_conv()
+    s = [parse(Int, l) for l in eachline("input/day1/input")]
+
+    count((@view conv(s, [1, -1])[2:end-1]) .> 0)
 end
 
 function part2()
@@ -30,4 +37,10 @@ function part2()
     end
 
     c
+end
+
+function part2_conv()
+    s = [parse(Int, l) for l in eachline("input/day1/input")]
+
+    count((@view conv(s, [1, 0, 0, -1])[4:end-3]) .> 0)
 end
