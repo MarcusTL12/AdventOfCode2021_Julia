@@ -24,7 +24,7 @@ function part2()
     sums = zeros(Int, length(s) - 2)
 
     for i in eachindex(sums)
-        sums[i] = s[i] + s[i + 1] + s[i + 2]
+        sums[i] = s[i] + s[i+1] + s[i+2]
     end
 
     for i = 1:length(sums)-1
