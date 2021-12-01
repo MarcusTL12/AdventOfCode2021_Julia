@@ -1,8 +1,6 @@
 
 function part1()
-    s = open("input/day1/input") do io
-        [parse(Int, l) for l in eachline(io)]
-    end
+    s = [parse(Int, l) for l in eachline("input/day1/input")]
 
     c = 0
 
@@ -15,9 +13,7 @@ function part1()
 end
 
 function part2()
-    s = open("input/day1/input") do io
-        [parse(Int, l) for l in eachline(io)]
-    end
+    s = [parse(Int, l) for l in eachline("input/day1/input")]
 
     c = 0
 
