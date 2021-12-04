@@ -1,6 +1,7 @@
 
 function isbingo(board)
-    any(all(row) for row in eachrow(board)) || any(all(col) for col in eachcol(board))
+    any(all(row) for row in eachrow(board)) ||
+        any(all(col) for col in eachcol(board))
 end
 
 function part1()
@@ -8,9 +9,9 @@ function part1()
 
     s = split(inp, "\n\n")
 
-    list = eval(Meta.parse("[" * s[1] * "]"))
+    list = eval(Meta.parse("[$(s[1])]"))
 
-    boards = [eval(Meta.parse("[" * m * "]")) for m in s[2:end]]
+    boards = [eval(Meta.parse("[$m]")) for m in s[2:end]]
 
     board_checks = [falses(5, 5) for _ in boards]
 
@@ -35,9 +36,9 @@ function part2()
 
     s = split(inp, "\n\n")
 
-    list = eval(Meta.parse("[" * s[1] * "]"))
+    list = eval(Meta.parse("[$(s[1])]"))
 
-    boards = [eval(Meta.parse("[" * m * "]")) for m in s[2:end]]
+    boards = [eval(Meta.parse("[$m]")) for m in s[2:end]]
 
     board_checks = [falses(5, 5) for _ in boards]
 
