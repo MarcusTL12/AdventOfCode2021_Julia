@@ -41,3 +41,29 @@ function part2_analytic()
 
     sum(trig_num(abs(x - z)) for x in inp)
 end
+
+function part2_binary()
+    inp = parse.(Int, split(readline("input/day7/input"), ','))
+
+    cost(x) = sum(trig_num(abs(x_ - x)) for x_ in inp)
+
+    dir(x) = sign(cost(x + 1) - cost(x))
+
+    l, h = extrema(inp)
+
+    while h - l > 1
+        m = (l + h) ÷ 2
+
+        d = dir(m)
+
+        if d > 0
+            h = m
+        elseif d < 0
+            l = m
+        else
+            break
+        end
+    end
+
+    minimum(cost, l:h)
+end
