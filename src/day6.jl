@@ -1,9 +1,10 @@
 using OffsetArrays
 using Plots
 using Polynomials
+using StaticArrays
 
 function part1()
-    inp = parse.(Int, split(readline("input/day7/input"), ','))
+    inp = parse.(Int, split(readline("input/day6/input"), ','))
 
     fish = OffsetArray(zeros(Int, 9), 0:8)
 
@@ -25,7 +26,7 @@ function part1()
 end
 
 function part2()
-    inp = parse.(Int, split(readline("input/day7/input"), ','))
+    inp = parse.(Int, split(readline("input/day6/input"), ','))
 
     fish = OffsetArray(zeros(Int, 9), 0:8)
 
@@ -76,4 +77,28 @@ function vizualize(days)
     display(p)
 
     plot(0:days, fishes; leg=false, yscale=:log10)
+end
+
+function matrix_solution()
+    inp = parse.(Int, split(readline("input/day6/input"), ','))
+
+    fish = zeros(Int, 9)
+
+    for t in inp
+        fish[t + 1] += 1
+    end
+
+    A = @SMatrix [
+        0 1 0 0 0 0 0 0 0
+        0 0 1 0 0 0 0 0 0
+        0 0 0 1 0 0 0 0 0
+        0 0 0 0 1 0 0 0 0
+        0 0 0 0 0 1 0 0 0
+        0 0 0 0 0 0 1 0 0
+        1 0 0 0 0 0 0 1 0
+        0 0 0 0 0 0 0 0 1
+        1 0 0 0 0 0 0 0 0
+    ]
+
+    sum(A^256 * fish)
 end
