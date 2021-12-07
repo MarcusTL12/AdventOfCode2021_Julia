@@ -3,7 +3,7 @@ using Plots
 using Polynomials
 
 function part1()
-    inp = parse.(Int, split(first(eachline("input/day6/input")), ','))
+    inp = parse.(Int, split(readline("input/day7/input"), ','))
 
     fish = OffsetArray(zeros(Int, 9), 0:8)
 
@@ -25,7 +25,7 @@ function part1()
 end
 
 function part2()
-    inp = parse.(Int, split(first(eachline("input/day6/input")), ','))
+    inp = parse.(Int, split(readline("input/day7/input"), ','))
 
     fish = OffsetArray(zeros(Int, 9), 0:8)
 
