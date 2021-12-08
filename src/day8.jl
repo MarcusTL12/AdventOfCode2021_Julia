@@ -1,20 +1,11 @@
 using Combinatorics
 
 function part1()
-    # counts = zeros(Int, 9)
     counter = 0
 
     for l in eachline("input/day8/input")
-        lastpart = split(l, '|')[2]
-        parts = split(lastpart)
-        for part in parts
-            if length(part) == 2
-                counter += 1
-            elseif length(part) == 4
-                counter += 1
-            elseif length(part) == 3
-                counter += 1
-            elseif length(part) == 7
+        for part in split(split(l, '|')[2])
+            if length(part) in (2, 3, 4, 7)
                 counter += 1
             end
         end
