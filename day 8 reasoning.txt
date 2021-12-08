@@ -6,7 +6,7 @@
 # Can deduce what a is mapped to, and which sets of two letters
 # the sets {c, f} and {b, d} are mapped to, respectively
 {a} = 7 \ 1
-{c, f} = 7 \ {a}
+{c, f} = 1
 {b, d} = 4 \ {c, f}
 
 # From this above, we can also conclude the two letters the set {e, g}
