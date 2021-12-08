@@ -57,3 +57,46 @@ function part2()
         num
     end for l in eachline("input/day8/input"))
 end
+
+function part2_map()
+    valid_segments = Dict([
+        [1, 1, 1, 0, 1, 1, 1] => 0,
+        [0, 0, 1, 0, 0, 1, 0] => 1,
+        [1, 0, 1, 1, 1, 0, 1] => 2,
+        [1, 0, 1, 1, 0, 1, 1] => 3,
+        [0, 1, 1, 1, 0, 1, 0] => 4,
+        [1, 1, 0, 1, 0, 1, 1] => 5,
+        [1, 1, 0, 1, 1, 1, 1] => 6,
+        [1, 0, 1, 0, 0, 1, 0] => 7,
+        [1, 1, 1, 1, 1, 1, 1] => 8,
+        [1, 1, 1, 1, 0, 1, 1] => 9,
+    ])
+
+    sum(begin
+        firstparts, secondparts = split(l, '|')
+
+        correctperm = first(Iterators.filter(perm -> all(begin
+                segments = zeros(Int, 7)
+                for c in part
+                    i = c - 'a' + 1
+                    segments[i] = 1
+                end
+                permute!(segments, perm)
+                haskey(valid_segments, segments)
+            end for part in split(firstparts)), permutations(1:7)))
+
+        num = 0
+
+        for part in split(secondparts)
+            segments = zeros(Int, 7)
+            for c in part
+                i = c - 'a' + 1
+                segments[i] = 1
+            end
+            permute!(segments, correctperm)
+            num = num * 10 + valid_segments[segments]
+        end
+
+        num
+    end for l in eachline("input/day8/input"))
+end
