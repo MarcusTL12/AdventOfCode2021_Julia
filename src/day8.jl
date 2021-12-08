@@ -92,153 +92,39 @@ function part2_map()
     end for l in eachline("input/day8/input"))
 end
 
-function find_smart_perm!(nums, cf, bd, eg)
-    empty!(cf)
-
-    for num in nums
-        if length(num) == 2
-            union!(cf, c - 'a' + 1 for c in num)
-        end
-    end
-
-    a = -1
-
-    for num in nums
-        if length(num) == 3
-            for c in num
-                i = c - 'a' + 1
-                if i ∉ cf
-                    a = i
-                    break
-                end
-            end
-        end
-        if a != -1
-            break
-        end
-    end
-
-    empty!(bd)
-
-    for num in nums
-        if length(num) == 4
-            union!(bd, c - 'a' + 1 for c in num)
-            setdiff!(bd, cf)
-        end
-    end
-
-    empty!(eg)
-    append!(eg, 1:7)
-    setdiff!(eg, a)
-    setdiff!(eg, cf)
-    setdiff!(eg, bd)
-
-    e = -1
-    g = -1
-
-    for num in nums
-        x = -1
-        y = -1
+function get_segment_matrix!(segs, nums)
+    fill!(segs, false)
+    for (i, num) in enumerate(nums)
         for c in num
-            i = c - 'a' + 1
-            if i in eg
-                if x == -1
-                    x = i
-                else
-                    y = i
-                end
-            end
-        end
-        if x != -1 && y == -1
-            g = x
-            setdiff!(eg, g)
-            e = first(eg)
-            break
+            j = c - 'a' + 1
+            segs[i, j] = true
         end
     end
-
-    b = -1
-    d = -1
-
-    for num in nums
-        if length(num) in (5, 6)
-            x = -1
-            y = -1
-            for c in num
-                i = c - 'a' + 1
-                if i in bd
-                    if x == -1
-                        x = i
-                    else
-                        y = i
-                    end
-                end
-            end
-            if y == -1
-                if length(num) == 5
-                    d = x
-                    setdiff!(bd, d)
-                    b = first(bd)
-                else
-                    b = x
-                    setdiff!(bd, b)
-                    d = first(bd)
-                end
-                break
-            end
-        end
-    end
-
-    c = -1
-    f = -1
-
-    for num in nums
-        if length(num) in (5, 6)
-            x = -1
-            y = -1
-            for c in num
-                i = c - 'a' + 1
-                if i in cf
-                    if x == -1
-                        x = i
-                    else
-                        y = i
-                    end
-                end
-            end
-            if y == -1
-                if length(num) == 6
-                    f = x
-                    setdiff!(cf, f)
-                    c = first(cf)
-                else
-                    has_e = false
-                    for c in num
-                        i = c - 'a' + 1
-                        if i == e
-                            has_e = true
-                            break
-                        end
-                    end
-                    if has_e
-                        c = x
-                        setdiff!(cf, c)
-                        f = first(cf)
-                    else
-                        f = x
-                        setdiff!(cf, f)
-                        c = first(cf)
-                    end
-                end
-                break
-            end
-        end
-    end
-
-    [a, b, c, d, e, f, g]
+    segs
 end
 
-function part2_smart()
+function find_very_smart_perm!(segs, nums)
+    get_segment_matrix!(segs, nums)
+
+    v = @view segs[:, sort(1:7; by=i->sum(@view segs[:, i]))]
+    v = @view v[:, [5, 2, 6, 3, 1, 7, 4]]
+
+    rsums = map(sum, eachrow(v))
+    one_ind = findfirst(==(2), rsums)
+    four_ind = findfirst(==(4), rsums)
+
+    if v[one_ind, 1]
+        v = @view v[:, [3, 2, 1, 4, 5, 6, 7]]
+    end
+
+    if !v[four_ind, 4]
+        v = @view v[:, [1, 2, 3, 7, 5, 6, 4]]
+    end
+
+    v.indices[2]
+end
+
+function part2_very_smart()
     valid_segments = Dict([
         [1, 1, 1, 0, 1, 1, 1] => 0,
         [0, 0, 1, 0, 0, 1, 0] => 1,
@@ -254,14 +140,12 @@ function part2_smart()
 
     total = 0
 
-    cf = Set{Int}()
-    bd = Set{Int}()
-    eg = Int[]
+    segs = falses(10, 7)
 
     for l in eachline("input/day8/input")
         firstparts, secondparts = split(l, '|')
 
-        perm = find_smart_perm!(split(firstparts), cf, bd, eg)
+        perm = find_very_smart_perm!(segs, split(firstparts))
 
         num = 0
 
