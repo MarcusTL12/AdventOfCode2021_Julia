@@ -1,17 +1,8 @@
 using Combinatorics
 
 function part1()
-    counter = 0
-
-    for l in eachline("input/day8/input")
-        for part in split(split(l, '|')[2])
-            if length(part) in (2, 3, 4, 7)
-                counter += 1
-            end
-        end
-    end
-
-    counter
+    sum(sum(length(part) in (2, 3, 4, 7) for part in split(split(l, '|')[2]))
+        for l in eachline("input/day8/input"))
 end
 
 function part2()
