@@ -53,7 +53,7 @@ function part2()
                 end
             end
         end
-        
+
         num
     end for l in eachline("input/day8/input"))
 end
