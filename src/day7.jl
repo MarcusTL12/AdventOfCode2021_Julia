@@ -23,6 +23,17 @@ function part2()
             for i = minimum(inp):maximum(inp))
 end
 
+function part2_mean()
+    inp = parse.(Int, split(readline("input/day7/input"), ','))
+
+    mid = mean(inp)
+    l = floor(Int, mid)
+    h = ceil(Int, mid)
+
+    min(sum(trig_num(abs(x - l)) for x in inp),
+        sum(trig_num(abs(x - l)) for x in inp))
+end
+
 function part2_analytic()
     inp = parse.(Int, split(readline("input/day7/input"), ','))
 

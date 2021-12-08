@@ -12,6 +12,9 @@
 # From this above, we can also conclude the two letters the set {e, g}
 {e, g} = {a, b, c, d, e, f, g} \ {a} \ {b, c} \ {c, f}
 
+# Observing that in no number contains e without g, gives a way to find out
+# which they are mapped to.
+
 # If a 5 or 6 length number has either b or d (which we know which are
 # from above), we can deduce which is b and which is d
 0 -> len6 -> b & !d
@@ -20,9 +23,6 @@
 5 -> len5 -> b & d
 6 -> len6 -> b & d
 9 -> len6 -> b & d
-
-# Observing that in no number contains e without g, gives a way to find out
-# which they are mapped to.
 
 # For {c, f}, the only cases where only one of them appear is in 2, 5 and 6.
 # 6 is the only one of these with len6, so then it contains f and not c.
