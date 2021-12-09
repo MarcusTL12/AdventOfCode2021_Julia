@@ -17,9 +17,7 @@ function part1()
     dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
 
     for i = 1:h, j = 1:w
-        is_low = all(m[i, j] < get(m, (i, j) .+ d, typemax(Int)) for d in dirs)
-
-        if is_low
+        if all(m[i, j] < get(m, (i, j) .+ d, typemax(Int)) for d in dirs)
             total += 1 + m[i, j]
         end
     end
@@ -27,17 +25,19 @@ function part1()
     total
 end
 
-function traverse_from!((i, j), m, locs)
+function traverse_from!((i, j), m, basins, num, s)
     dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
 
-    push!(locs, (i, j))
+    s[] += 1
+    basins[i, j] = num
 
     h, w = size(m)
 
     for d in dirs
         (ni, nj) = (i, j) .+ d
-        if ni in 1:h && nj in 1:w && m[ni, nj] < m[i, j]
-            traverse_from!((ni, nj), m, locs)
+        if ni in 1:h && nj in 1:w && 9 > m[ni, nj] > m[i, j] &&
+           basins[ni, nj] == 0
+            traverse_from!((ni, nj), m, basins, num, s)
         end
     end
 end
@@ -57,40 +57,21 @@ function part2()
 
     dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
 
-    amt_basins = 0
+    basin_mins = Tuple{Int,Int}[]
+
+    for i = 1:h, j = 1:w
+        if all(m[i, j] < get(m, (i, j) .+ d, typemax(Int)) for d in dirs)
+            push!(basin_mins, (i, j))
+        end
+    end
 
     basins = zeros(Int, size(m))
+    basin_sizes = Int[]
 
-    for i = 1:h, j = 1:w
-        is_low = all(m[i, j] < get(m, (i, j) .+ d, typemax(Int)) for d in dirs)
-
-        if is_low
-            amt_basins += 1
-            basins[i, j] = amt_basins
-        end
-    end
-
-    loc_buf = Tuple{Int,Int}[]
-
-    for i = 1:h, j = 1:w
-        if basins[i, j] == 0 && m[i, j] != 9
-            empty!(loc_buf)
-            traverse_from!((i, j), m, loc_buf)
-
-            basin_num = basins[last(loc_buf)...]
-
-            for (i_, j_) in loc_buf
-                basins[i_, j_] = basin_num
-            end
-        end
-    end
-
-    basin_sizes = zeros(Int, amt_basins)
-
-    for i = 1:h, j = 1:w
-        if basins[i, j] != 0
-            basin_sizes[basins[i, j]] += 1
-        end
+    for (i, pos) in enumerate(basin_mins)
+        s = Ref(0)
+        traverse_from!(pos, m, basins, i, s)
+        push!(basin_sizes, s[])
     end
 
     sort!(basin_sizes)
