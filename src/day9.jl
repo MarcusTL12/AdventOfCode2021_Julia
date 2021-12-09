@@ -25,16 +25,16 @@ function part1()
     total
 end
 
-function traverse_from!((i, j), m, basins, num, s)
+function traverse_from!((i, j), m, s)
     s[] += 1
-    basins[i, j] = true
+    m[i, j] = 9
 
     h, w = size(m)
 
     for d in dirs
         (ni, nj) = (i, j) .+ d
-        if ni in 1:h && nj in 1:w && 9 != m[ni, nj] && !basins[ni, nj]
-            traverse_from!((ni, nj), m, basins, num, s)
+        if ni in 1:h && nj in 1:w && 9 != m[ni, nj]
+            traverse_from!((ni, nj), m, s)
         end
     end
 end
@@ -44,13 +44,12 @@ function part2()
 
     h, w = size(m)
 
-    basins = fill(false, size(m))
     basin_sizes = [0, 0, 0]
 
     for j = 1:w, i = 1:h
-        if m[i, j] != 9 && !basins[i, j]
+        if m[i, j] != 9
             s = Ref(0)
-            traverse_from!((i, j), m, basins, i, s)
+            traverse_from!((i, j), m, s)
             push!(basin_sizes, s[])
             deleteat!(basin_sizes, findmin(basin_sizes)[2])
         end
