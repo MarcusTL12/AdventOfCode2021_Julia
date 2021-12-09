@@ -17,7 +17,7 @@ function part1()
     total = 0
 
     for i = 1:h, j = 1:w
-        if all(m[i, j] < get(m, (i, j) .+ d, typemax(Int)) for d in dirs)
+        if all(m[i, j] < get(m, (i, j) .+ d, 9) for d in dirs)
             total += 1 + m[i, j]
         end
     end
