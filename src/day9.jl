@@ -50,8 +50,7 @@ function part2()
 
     for j = 1:w, i = 1:h
         if m[i, j] != 9
-            s = traverse_from!((i, j), m)
-            push!(basin_sizes, s)
+            push!(basin_sizes, traverse_from!((i, j), m))
             deleteat!(basin_sizes, findmin(basin_sizes)[2])
         end
     end
