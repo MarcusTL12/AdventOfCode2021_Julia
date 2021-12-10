@@ -34,6 +34,40 @@ function part1()
     total
 end
 
+function part1_rec()
+    brackets = Dict([
+        '(' => ')',
+        '[' => ']',
+        '{' => '}',
+        '<' => '>',
+    ])
+
+    points = Dict([
+        ')' => 3,
+        ']' => 57,
+        '}' => 1197,
+        '>' => 25137,
+    ])
+
+    function rec(it)
+        c = popfirst!(it)
+        if haskey(brackets, c)
+            return rec(it)
+        else
+            closing = popfirst!(it)
+            if closing != brackets[c]
+                return points[closing]
+            end
+        end
+    end
+
+    # for l in eachline("input/day10/input")
+
+    # end
+
+    rec(Iterators.Stateful("{([(<{}[<>[]}>{[]{[(<()>"))
+end
+
 function part2()
     allpoints = Int[]
 
