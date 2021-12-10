@@ -49,23 +49,23 @@ function part1_rec()
         '>' => 25137,
     ])
 
-    function rec(it)
+    function rec(opener, it)
         c = popfirst!(it)
+        @show opener, c
         if haskey(brackets, c)
-            closing = rec(it)
-            if !isnothing(closing) && closing != brackets[c]
-                return points[closing]
-            end
-        else
-            return c
+            return rec(c, it)
+        elseif c != brackets[opener]
+            return points[c]
         end
+
+        0
     end
 
     # for l in eachline("input/day10/input")
 
     # end
 
-    rec(Iterators.Stateful("{([(<{}[<>[]}>{[]{[(<()>"))
+    rec(' ', Iterators.Stateful("{([(<{}[<>[]}>{[]{[(<()>"))
 end
 
 function part2()
