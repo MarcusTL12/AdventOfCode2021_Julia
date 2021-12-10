@@ -24,12 +24,9 @@ function part1()
         for c in l
             if haskey(brackets, c)
                 push!(stack, c)
-            else
-                opener = pop!(stack)
-                if c != brackets[opener]
-                    total += points[c]
-                    break
-                end
+            elseif c != brackets[pop!(stack)]
+                total += points[c]
+                break
             end
         end
     end
