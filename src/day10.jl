@@ -41,17 +41,10 @@ function part2()
     allpoints = Int[]
 
     brackets = Dict([
-        '(' => ')',
-        '[' => ']',
-        '{' => '}',
-        '<' => '>',
-    ])
-
-    points = Dict([
-        '(' => 1,
-        '[' => 2,
-        '{' => 3,
-        '<' => 4,
+        '(' => (')', 1),
+        '[' => (']', 2),
+        '{' => ('}', 3),
+        '<' => ('>', 4),
     ])
 
     stack = Char[]
@@ -63,16 +56,16 @@ function part2()
             if haskey(brackets, c)
                 push!(stack, c)
             else
-                opener = pop!(stack)
-                if c != brackets[opener]
+                if c != brackets[pop!(stack)][1]
                     corrupted = true
+                    break
                 end
             end
         end
         if !corrupted && !isempty(stack)
             score = 0
             while !isempty(stack)
-                score = score * 5 + points[pop!(stack)]
+                score = score * 5 + brackets[pop!(stack)][2]
             end
             push!(allpoints, score)
         end
