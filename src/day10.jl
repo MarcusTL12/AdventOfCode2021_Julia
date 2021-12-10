@@ -50,22 +50,23 @@ function part1_rec()
     ])
 
     function rec(opener, it)
-        c = popfirst!(it)
-        @show opener, c
-        if haskey(brackets, c)
-            return rec(c, it)
-        elseif c != brackets[opener]
-            return points[c]
+        while !isempty(it)
+            c = popfirst!(it)
+            if haskey(brackets, c)
+                res = rec(c, it)
+                if res != 0
+                    return res
+                end
+            elseif c != brackets[opener]
+                return points[c]
+            else
+                return 0
+            end
         end
-
         0
     end
 
-    # for l in eachline("input/day10/input")
-
-    # end
-
-    rec(' ', Iterators.Stateful("{([(<{}[<>[]}>{[]{[(<()>"))
+    sum(rec(' ', Iterators.Stateful(l)) for l in eachline("input/day10/input"))
 end
 
 function part2()
