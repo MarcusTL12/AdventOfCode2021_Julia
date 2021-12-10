@@ -52,12 +52,12 @@ function part1_rec()
     function rec(it)
         c = popfirst!(it)
         if haskey(brackets, c)
-            return rec(it)
-        else
-            closing = popfirst!(it)
-            if closing != brackets[c]
+            closing = rec(it)
+            if !isnothing(closing) && closing != brackets[c]
                 return points[closing]
             end
+        else
+            return c
         end
     end
 
