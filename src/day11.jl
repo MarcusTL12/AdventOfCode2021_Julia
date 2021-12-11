@@ -57,7 +57,7 @@ function part2()
     m = parse_input("input/day11/input")
     w, h = size(m)
 
-    for stepnumber = Iterators.countfrom(1)
+    for stepnumber in Iterators.countfrom(1)
         for i = 1:h, j = 1:w
             m[i, j] += 1
         end
