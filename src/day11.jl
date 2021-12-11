@@ -1,28 +1,26 @@
 
+const dirs = [
+    (0, 1),
+    (1, 1),
+    (1, 0),
+    (1, -1),
+    (0, -1),
+    (-1, -1),
+    (-1, 0),
+    (-1, 1),
+]
+
+function parse_input(filename)
+    data = read(filename)
+    w = findfirst(==(0xa), data)
+    h = length(data) ÷ w
+    data .-= 0x30
+    @view reshape(data, w, h)[1:end-1, :]
+end
+
 function part1()
-    inp = [l for l in eachline("input/day11/input")]
-
-    w = length(inp[1])
-    h = length(inp)
-
-    m = zeros(Int, w, h)
-
-    for (i, l) in enumerate(inp)
-        for (j, c) in enumerate(l)
-            m[i, j] = c - '0'
-        end
-    end
-
-    dirs = [
-        (0, 1),
-        (1, 1),
-        (1, 0),
-        (1, -1),
-        (0, -1),
-        (-1, -1),
-        (-1, 0),
-        (-1, 1),
-    ]
+    m = parse_input("input/day11/input")
+    w, h = size(m)
 
     flashed = falses(w, h)
 
@@ -66,18 +64,8 @@ function part1()
 end
 
 function part2()
-    inp = [l for l in eachline("input/day11/input")]
-
-    w = length(inp[1])
-    h = length(inp)
-
-    m = zeros(Int, w, h)
-
-    for (i, l) in enumerate(inp)
-        for (j, c) in enumerate(l)
-            m[i, j] = c - '0'
-        end
-    end
+    m = parse_input("input/day11/input")
+    w, h = size(m)
 
     dirs = [
         (0, 1),
