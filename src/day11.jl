@@ -25,13 +25,13 @@ function part1()
     total = 0
 
     for _ = 1:100
-        for i = 1:h, j = 1:w
+        for j = 1:h, i = 1:w
             m[i, j] += 1
         end
 
         while true
             didflash = false
-            for i = 1:h, j = 1:w
+            for j = 1:h, i = 1:w
                 if m[i, j] > 9
                     m[i, j] = 0
                     didflash = true
@@ -58,13 +58,13 @@ function part2()
     w, h = size(m)
 
     for stepnumber in Iterators.countfrom(1)
-        for i = 1:h, j = 1:w
+        for j = 1:h, i = 1:w
             m[i, j] += 1
         end
 
         while true
             didflash = false
-            for i = 1:h, j = 1:w
+            for j = 1:h, i = 1:w
                 if m[i, j] > 9
                     m[i, j] = 0
                     didflash = true
