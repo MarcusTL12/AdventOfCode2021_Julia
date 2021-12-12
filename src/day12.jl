@@ -99,7 +99,7 @@ function part2()
     amt_remaining_paths2_tmp(graph, small_caves, 1, remaining, false)
 end
 
-function amt_remaining_paths2_smart(graph, small_caves, curpos, remaining_nodes,
+function amt_remaining_paths2_memo(graph, small_caves, curpos, remaining_nodes,
     spent_double, memo)
     if haskey(memo, (curpos, remaining_nodes, spent_double))
         memo[(curpos, remaining_nodes, spent_double)]
@@ -120,7 +120,7 @@ function amt_remaining_paths2_smart(graph, small_caves, curpos, remaining_nodes,
                         n_spent_double = true
                     end
                 end
-                amt += amt_remaining_paths2_smart(graph, small_caves, node,
+                amt += amt_remaining_paths2_memo(graph, small_caves, node,
                     remaining_nodes, n_spent_double, memo)
                 if removed
                     push!(remaining_nodes, node)
@@ -132,7 +132,7 @@ function amt_remaining_paths2_smart(graph, small_caves, curpos, remaining_nodes,
     end
 end
 
-function part2_smart()
+function part2_memo()
     graph, small_caves = parse_input("input/day12/input")
 
     remaining = Set(collect(keys(graph)))
@@ -141,5 +141,5 @@ function part2_smart()
 
     memo = Dict{Tuple{Int,Set{Int},Bool},Int}()
 
-    amt_remaining_paths2_smart(graph, small_caves, 1, remaining, false, memo)
+    amt_remaining_paths2_memo(graph, small_caves, 1, remaining, false, memo)
 end
