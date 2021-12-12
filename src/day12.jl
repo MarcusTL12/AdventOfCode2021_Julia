@@ -1,15 +1,16 @@
-using Combinatorics
 
-function amt_remaining_paths1(graph, curpos, remaining_nodes)
+function amt_remaining_paths1(graph, small_caves, curpos, remaining_nodes)
     amt = 0
     for node in graph[curpos]
-        if node == "end"
+        if node == 2
             amt += 1
         elseif node in remaining_nodes
-            if all(islowercase, node)
+            if node in small_caves
                 delete!(remaining_nodes, node)
             end
-            amt += amt_remaining_paths1(graph, node, remaining_nodes)
+            amt += amt_remaining_paths1(
+                graph, small_caves, node, remaining_nodes
+            )
             push!(remaining_nodes, node)
         end
     end
@@ -17,34 +18,52 @@ function amt_remaining_paths1(graph, curpos, remaining_nodes)
 end
 
 function part1()
-    graph = Dict{String,Vector{String}}()
+    node_translation = Dict([
+        "start" => 1,
+        "end" => 2,
+    ])
+
+    small_caves = Set{Int}()
+
+    graph = Dict{Int,Vector{Int}}()
 
     for l in eachline("input/day12/input")
         s = split(l, '-')
         for i = 1:2
-            if !haskey(graph, s[i])
-                graph[s[i]] = String[]
+            if !haskey(node_translation, s[i])
+                node_translation[s[i]] = length(node_translation) + 1
+            end
+            if !haskey(graph, node_translation[s[i]])
+                graph[node_translation[s[i]]] = Int[]
+            end
+            if all(islowercase, s[i])
+                push!(small_caves, node_translation[s[i]])
             end
         end
-        push!(graph[s[1]], s[2])
-        push!(graph[s[2]], s[1])
+        i1 = node_translation[s[1]]
+        i2 = node_translation[s[2]]
+        push!(graph[i1], i2)
+        push!(graph[i2], i1)
     end
 
+    delete!(small_caves, 1)
+    delete!(small_caves, 2)
+
     remaining = Set(collect(keys(graph)))
-    start = "start"
+    start = 1
     delete!(remaining, start)
 
-    amt_remaining_paths1(graph, start, remaining)
+    amt_remaining_paths1(graph, small_caves, start, remaining)
 end
 
 function amt_remaining_paths2(graph, curpos, paths, curpath, remaining_nodes,
-    allowed_small, spent_double)
+    spent_double)
     for node in graph[curpos]
         if node == "end"
             push!(curpath, "end")
             push!(paths, copy(curpath))
             pop!(curpath)
-        elseif node in remaining_nodes || (node == allowed_small && !spent_double)
+        elseif (node in remaining_nodes || !spent_double) && node != "start"
             nnodes = copy(remaining_nodes)
             if all(islowercase, node)
                 delete!(nnodes, node)
@@ -55,7 +74,7 @@ function amt_remaining_paths2(graph, curpos, paths, curpath, remaining_nodes,
             end
             push!(curpath, node)
             amt_remaining_paths2(graph, node, paths, curpath, nnodes,
-                allowed_small, n_spent_double)
+                n_spent_double)
             pop!(curpath)
         end
     end
@@ -81,12 +100,8 @@ function part2()
 
     allpaths = Set{Vector{String}}()
 
-    for k in keys(graph)
-        if all(islowercase, k) && k != "end" && k != "start"
-            amt_remaining_paths2(graph, start, allpaths, String["start"],
-                remaining, k, false)
-        end
-    end
+    amt_remaining_paths2(graph, start, allpaths, String["start"],
+        remaining, false)
 
     length(allpaths)
 end
