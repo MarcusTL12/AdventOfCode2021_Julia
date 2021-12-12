@@ -17,7 +17,7 @@ function amt_remaining_paths1(graph, small_caves, curpos, remaining_nodes)
     amt
 end
 
-function part1()
+function parse_input(filename)
     node_translation = Dict([
         "start" => 1,
         "end" => 2,
@@ -27,7 +27,7 @@ function part1()
 
     graph = Dict{Int,Vector{Int}}()
 
-    for l in eachline("input/day12/input")
+    for l in eachline(filename)
         s = split(l, '-')
         for i = 1:2
             if !haskey(node_translation, s[i])
@@ -49,6 +49,12 @@ function part1()
     delete!(small_caves, 1)
     delete!(small_caves, 2)
 
+    graph, small_caves
+end
+
+function part1()
+    graph, small_caves = parse_input("input/day12/input")
+
     remaining = Set(collect(keys(graph)))
     start = 1
     delete!(remaining, start)
@@ -56,52 +62,46 @@ function part1()
     amt_remaining_paths1(graph, small_caves, start, remaining)
 end
 
-function amt_remaining_paths2(graph, curpos, paths, curpath, remaining_nodes,
-    spent_double)
+function amt_remaining_paths2(graph, small_caves, curpos, paths, curpath,
+    remaining_nodes, spent_double)
     for node in graph[curpos]
-        if node == "end"
-            push!(curpath, "end")
+        if node == 2
+            push!(curpath, 2)
             push!(paths, copy(curpath))
             pop!(curpath)
-        elseif (node in remaining_nodes || !spent_double) && node != "start"
-            nnodes = copy(remaining_nodes)
-            if all(islowercase, node)
-                delete!(nnodes, node)
-            end
+        elseif node != 1 && (node in remaining_nodes || !spent_double)
+            removed = false
             n_spent_double = spent_double
-            if node ∉ remaining_nodes
-                n_spent_double = true
+            if node in small_caves
+                if node in remaining_nodes
+                    removed = true
+                    delete!(remaining_nodes, node)
+                else
+                    n_spent_double = true
+                end
             end
             push!(curpath, node)
-            amt_remaining_paths2(graph, node, paths, curpath, nnodes,
-                n_spent_double)
+            amt_remaining_paths2(graph, small_caves, node, paths, curpath,
+                remaining_nodes, n_spent_double)
             pop!(curpath)
+            if removed
+                push!(remaining_nodes, node)
+            end
         end
     end
 end
 
 function part2()
-    graph = Dict{String,Vector{String}}()
-
-    for l in eachline("input/day12/input")
-        s = split(l, '-')
-        for i = 1:2
-            if !haskey(graph, s[i])
-                graph[s[i]] = String[]
-            end
-        end
-        push!(graph[s[1]], s[2])
-        push!(graph[s[2]], s[1])
-    end
+    graph, small_caves = parse_input("input/day12/input")
 
     remaining = Set(collect(keys(graph)))
-    start = "start"
+    start = 1
     delete!(remaining, start)
 
-    allpaths = Set{Vector{String}}()
+    allpaths = Set{Vector{Int}}()
 
-    amt_remaining_paths2(graph, start, allpaths, String["start"],
-        remaining, false)
+    amt_remaining_paths2(graph, small_caves, start, allpaths, [1], remaining,
+        false)
 
     length(allpaths)
 end
