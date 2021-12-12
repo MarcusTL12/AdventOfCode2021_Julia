@@ -1,22 +1,4 @@
 
-function amt_remaining_paths1(graph, small_caves, curpos, remaining_nodes)
-    amt = 0
-    for node in graph[curpos]
-        if node == 2
-            amt += 1
-        elseif node in remaining_nodes
-            if node in small_caves
-                delete!(remaining_nodes, node)
-            end
-            amt += amt_remaining_paths1(
-                graph, small_caves, node, remaining_nodes
-            )
-            push!(remaining_nodes, node)
-        end
-    end
-    amt
-end
-
 function parse_input(filename)
     node_translation = Dict([
         "start" => 1,
@@ -50,6 +32,24 @@ function parse_input(filename)
     delete!(small_caves, 2)
 
     graph, small_caves
+end
+
+function amt_remaining_paths1(graph, small_caves, curpos, remaining_nodes)
+    amt = 0
+    for node in graph[curpos]
+        if node == 2
+            amt += 1
+        elseif node in remaining_nodes
+            if node in small_caves
+                delete!(remaining_nodes, node)
+            end
+            amt += amt_remaining_paths1(
+                graph, small_caves, node, remaining_nodes
+            )
+            push!(remaining_nodes, node)
+        end
+    end
+    amt
 end
 
 function part1()
@@ -104,4 +104,49 @@ function part2()
         false)
 
     length(allpaths)
+end
+
+function amt_remaining_paths2_smart(graph, small_caves, curpos, remaining_nodes,
+    spent_double, memo)
+    if haskey(memo, (curpos, remaining_nodes, spent_double))
+        memo[(curpos, remaining_nodes, spent_double)]
+    else
+        key = (curpos, copy(remaining_nodes), spent_double)
+        amt = 0
+        for node in graph[curpos]
+            if node == 2
+                amt += 1
+            elseif node != 1 && (node in remaining_nodes || !spent_double)
+                removed = false
+                n_spent_double = spent_double
+                if node in small_caves
+                    if node in remaining_nodes
+                        removed = true
+                        delete!(remaining_nodes, node)
+                    else
+                        n_spent_double = true
+                    end
+                end
+                amt += amt_remaining_paths2_smart(graph, small_caves, node,
+                    remaining_nodes, n_spent_double, memo)
+                if removed
+                    push!(remaining_nodes, node)
+                end
+            end
+        end
+        memo[key] = amt
+        amt
+    end
+end
+
+function part2_smart()
+    graph, small_caves = parse_input("input/day12/input")
+
+    remaining = Set(collect(keys(graph)))
+    start = 1
+    delete!(remaining, start)
+
+    memo = Dict{Tuple{Int,Set{Int},Bool},Int}()
+
+    amt_remaining_paths2_smart(graph, small_caves, 1, remaining, false, memo)
 end
