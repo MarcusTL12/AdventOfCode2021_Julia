@@ -62,13 +62,12 @@ function part1()
     amt_remaining_paths1(graph, small_caves, start, remaining)
 end
 
-function amt_remaining_paths2(graph, small_caves, curpos, paths, curpath,
-    remaining_nodes, spent_double)
+function amt_remaining_paths2(graph, small_caves, curpos, remaining_nodes,
+    spent_double)
+    amt = 0
     for node in graph[curpos]
         if node == 2
-            push!(curpath, 2)
-            push!(paths, copy(curpath))
-            pop!(curpath)
+            amt += 1
         elseif node != 1 && (node in remaining_nodes || !spent_double)
             removed = false
             n_spent_double = spent_double
@@ -80,15 +79,14 @@ function amt_remaining_paths2(graph, small_caves, curpos, paths, curpath,
                     n_spent_double = true
                 end
             end
-            push!(curpath, node)
-            amt_remaining_paths2(graph, small_caves, node, paths, curpath,
+            amt += amt_remaining_paths2_tmp(graph, small_caves, node,
                 remaining_nodes, n_spent_double)
-            pop!(curpath)
             if removed
                 push!(remaining_nodes, node)
             end
         end
     end
+    amt
 end
 
 function part2()
@@ -98,12 +96,7 @@ function part2()
     start = 1
     delete!(remaining, start)
 
-    allpaths = Set{Vector{Int}}()
-
-    amt_remaining_paths2(graph, small_caves, start, allpaths, [1], remaining,
-        false)
-
-    length(allpaths)
+    amt_remaining_paths2_tmp(graph, small_caves, 1, remaining, false)
 end
 
 function amt_remaining_paths2_smart(graph, small_caves, curpos, remaining_nodes,
