@@ -35,14 +35,16 @@ function part1()
 end
 
 function do_step(insertions, counters)
-    new_counters = Dict{String,Int}()
+    new_counters = Dict{Tuple{Char,Char},Int}()
 
     for (k, v) in counters
         if haskey(insertions, k)
             c = insertions[k]
 
-            a = k[1] * c
-            b = c * k[2]
+            ka, kb = k
+
+            a = (ka, c)
+            b = (c, kb)
             new_counters[a] = get(new_counters, a, 0) + v
             new_counters[b] = get(new_counters, b, 0) + v
         else
@@ -59,19 +61,18 @@ function part2()
     firstline = popfirst!(lines)
     popfirst!(lines)
 
-    insertions = Dict(split(l, " -> ") for l in lines)
+    insertions = Dict(begin
+        a, b = split(l, " -> ")
+        (a[1], a[2]) => b[1]
+    end for l in lines)
 
-    counters = Dict{String,Int}()
+    counters = Dict{Tuple{Char,Char},Int}()
 
-    for i = 1:length(firstline)-1
-        if !haskey(counters, firstline[i:i+1])
-            counters[firstline[i:i+1]] = 1
-        else
-            counters[firstline[i:i+1]] += 1
-        end
+    for k in zip(firstline, Iterators.Drop(firstline, 1))
+        counters[k] = get(counters, k, 0) + 1
     end
 
-    for _ in 1:40
+    for _ = 1:40
         counters = do_step(insertions, counters)
     end
 
