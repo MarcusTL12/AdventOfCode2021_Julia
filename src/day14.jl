@@ -5,7 +5,7 @@ function part1()
     firstline = popfirst!(lines)
     popfirst!(lines)
 
-    templates = Dict(split(l, " -> ") for l in lines)
+    insertions = Dict(split(l, " -> ") for l in lines)
 
     polymer = Vector{Char}(firstline)
 
@@ -13,8 +13,8 @@ function part1()
         i = 1
         while i < length(polymer)
             k = polymer[i] * polymer[i+1]
-            if haskey(templates, k)
-                insert!(polymer, i + 1, first(templates[k]))
+            if haskey(insertions, k)
+                insert!(polymer, i + 1, first(insertions[k]))
                 i += 1
             end
             i += 1
@@ -34,12 +34,12 @@ function part1()
     maximum(values(counter)) - minimum(values(counter))
 end
 
-function do_step(templates, counters)
+function do_step(insertions, counters)
     new_counters = Dict{String,Int}()
 
     for (k, v) in counters
-        if haskey(templates, k)
-            c = templates[k]
+        if haskey(insertions, k)
+            c = insertions[k]
 
             a = k[1] * c
             b = c * k[2]
@@ -59,7 +59,7 @@ function part2()
     firstline = popfirst!(lines)
     popfirst!(lines)
 
-    templates = Dict(split(l, " -> ") for l in lines)
+    insertions = Dict(split(l, " -> ") for l in lines)
 
     counters = Dict{String,Int}()
 
@@ -72,7 +72,7 @@ function part2()
     end
 
     for _ in 1:40
-        counters = do_step(templates, counters)
+        counters = do_step(insertions, counters)
     end
 
     char_counters = Dict{Char,Int}(last(firstline) => 1)
