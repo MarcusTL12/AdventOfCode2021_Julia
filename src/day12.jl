@@ -79,7 +79,7 @@ function amt_remaining_paths2(graph, small_caves, curpos, remaining_nodes,
                     n_spent_double = true
                 end
             end
-            amt += amt_remaining_paths2_tmp(graph, small_caves, node,
+            amt += amt_remaining_paths2(graph, small_caves, node,
                 remaining_nodes, n_spent_double)
             if removed
                 push!(remaining_nodes, node)
@@ -96,7 +96,7 @@ function part2()
     start = 1
     delete!(remaining, start)
 
-    amt_remaining_paths2_tmp(graph, small_caves, 1, remaining, false)
+    amt_remaining_paths2(graph, small_caves, 1, remaining, false)
 end
 
 function amt_remaining_paths2_memo(graph, small_caves, curpos, remaining_nodes,
