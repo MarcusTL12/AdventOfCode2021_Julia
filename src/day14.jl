@@ -1,6 +1,6 @@
 
 function part1()
-    lines = Iterators.Stateful(eachline("input/day14/ex1"))
+    lines = Iterators.Stateful(eachline("input/day14/input"))
 
     firstline = popfirst!(lines)
     popfirst!(lines)
