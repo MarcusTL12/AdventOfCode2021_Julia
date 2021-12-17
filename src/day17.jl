@@ -14,7 +14,7 @@ function part1()
         y = 0
         hit = false
         max_y = 0
-        while x < xmax && y > ymax
+        while x <= xmax && y >= ymin
             x += vx
             y += vy
             max_y = max(max_y, y)
