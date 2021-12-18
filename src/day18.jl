@@ -24,9 +24,7 @@ function snail_explode(n, depth, stuff_happened)
         return
     end
     if depth >= 4 && !stuff_happened[]
-        # @show n
         if !(n[1] isa Int) && (n[1][1] isa Int) && (n[1][2] isa Int)
-            # println("Hei1")
             stuff_happened[] = true
             (l, r) = n[1]
             n[1] = 0
@@ -37,7 +35,6 @@ function snail_explode(n, depth, stuff_happened)
             end
             return (false, l)
         elseif !(n[2] isa Int) && (n[2][1] isa Int) && (n[2][2] isa Int)
-            # println("Hei2")
             stuff_happened[] = true
             (l, r) = n[2]
             n[2] = 0
