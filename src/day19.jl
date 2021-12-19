@@ -60,13 +60,9 @@ function find_possible_overlap(s1, s2)
         s2_r = rotate_scanner!(copy(s2), face, rot)
         for i = 1:length(s1), j = 1:length(s2)
             s2_pos = s1[i] - s2_r[j]
-            amt_in_range = 0
-            for k = 1:length(s1)
-                amt_in_range += maximum(abs, s1[k] - s2_pos) <= 1000
-                if amt_in_range > 12
-                    break
-                end
-            end
+            amt_in_range = sum(
+                maximum(abs, s1[k] - s2_pos) <= 1000 for k = 1:length(s1)
+            )
             if amt_in_range != 12
                 continue
             end
