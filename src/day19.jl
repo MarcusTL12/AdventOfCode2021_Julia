@@ -62,14 +62,13 @@ function find_possible_overlap(s1, s2)
             s2_pos = s1[i] - s2_r[j]
             if sum(
                 maximum(abs, s1[k] - s2_pos) <= 1000 for k = 1:length(s1)
-            ) != 12
-                continue
-            end
-            amt_overlapping = 0
-            for k = 1:length(s1), l = 1:length(s2)
-                amt_overlapping += (s1[k] == (s2_r[l] + s2_pos))
-                if amt_overlapping >= 12
-                    return (face, rot, s2_pos)
+            ) == 12
+                amt_overlapping = 0
+                for k = 1:length(s1), l = 1:length(s2)
+                    amt_overlapping += (s1[k] == (s2_r[l] + s2_pos))
+                    if amt_overlapping >= 12
+                        return (face, rot, s2_pos)
+                    end
                 end
             end
         end
