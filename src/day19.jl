@@ -78,14 +78,16 @@ function part1()
 
     while length(fixed) < length(inp)
         for i = 1:length(inp)
-            for j = 1:length(inp)
-                if i != j && i ∈ fixed && j ∉ fixed
-                    ovlp = find_possible_overlap(inp[i], inp[j])
-                    if !isnothing(ovlp)
-                        push!(fixed, j)
-                        face, rot, off = ovlp
-                        rotate_scanner!(inp[j], face, rot)
-                        offset_scanner!(inp[j], off)
+            if i ∈ fixed
+                Threads.@threads for j = 1:length(inp)
+                    if i != j && j ∉ fixed
+                        ovlp = find_possible_overlap(inp[i], inp[j])
+                        if !isnothing(ovlp)
+                            push!(fixed, j)
+                            face, rot, off = ovlp
+                            rotate_scanner!(inp[j], face, rot)
+                            offset_scanner!(inp[j], off)
+                        end
                     end
                 end
             end
@@ -104,15 +106,17 @@ function part2()
 
     while length(fixed) < length(inp)
         for i = 1:length(inp)
-            for j = 1:length(inp)
-                if i != j && i ∈ fixed && j ∉ fixed
-                    ovlp = find_possible_overlap(inp[i], inp[j])
-                    if !isnothing(ovlp)
-                        push!(fixed, j)
-                        face, rot, off = ovlp
-                        rotate_scanner!(inp[j], face, rot)
-                        offset_scanner!(inp[j], off)
-                        push!(scanner_coords, off)
+            if i ∈ fixed
+                Threads.@threads for j = 1:length(inp)
+                    if i != j && j ∉ fixed
+                        ovlp = find_possible_overlap(inp[i], inp[j])
+                        if !isnothing(ovlp)
+                            push!(fixed, j)
+                            face, rot, off = ovlp
+                            rotate_scanner!(inp[j], face, rot)
+                            offset_scanner!(inp[j], off)
+                            push!(scanner_coords, off)
+                        end
                     end
                 end
             end
