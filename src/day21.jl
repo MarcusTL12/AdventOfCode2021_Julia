@@ -46,8 +46,6 @@ function rec(pos_a, pos_b, score_a, score_b, turn, memo)
         memo[k] = (0, 1)
     elseif score_b < 21
         memo[k] = (1, 0)
-    else
-        println("HEEELP!")
     end
 end
 
