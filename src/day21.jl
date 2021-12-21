@@ -57,5 +57,6 @@ function part2()
 
     score_a = score_b = 0
 
-    rec(pos_a, pos_b, score_a, score_b, true, Dict())
+    maximum(rec(pos_a, pos_b, score_a, score_b, true,
+        Dict{Tuple{Int,Int,Int,Int,Bool},Tuple{Int,Int}}()))
 end
