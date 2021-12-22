@@ -69,7 +69,11 @@ end
 function box_diff_from_list(list, subbox)
     nlist = eltype(list)[]
     for box in list
-        append!(nlist, box_difference(box, subbox))
+        if is_any_overlap(box, subbox)
+            append!(nlist, box_difference(box, subbox))
+        else
+            push!(nlist, box)
+        end
     end
     nlist
 end
