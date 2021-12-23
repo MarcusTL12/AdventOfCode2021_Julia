@@ -60,10 +60,6 @@ function part1()
         (top_floor, bottom_floor, hallway), energy = dequeue_pair!(queue)
         push!(visited, (copy(top_floor), copy(bottom_floor), copy(hallway)))
 
-        # show_map(hallway, top_floor, bottom_floor)
-        # @show energy
-        # println()
-        # readline()
         if top_floor == [1, 2, 3, 4] && bottom_floor == [1, 2, 3, 4] &&
            all(==(0), hallway)
             return energy
@@ -120,15 +116,10 @@ function part1()
                         top_floor, 1
                     end
                     if taken_floor[pod_ind] == 0
-                        # println("Putting into hole")
-                        # @show i, pod_ind
                         new_energy = energy +
                                      (depth + abs(room_ind - i)) *
                                      10^(pod_ind - 1)
                         taken_floor[pod_ind] = pod_ind
-                        # show_map(hallway, top_floor, bottom_floor)
-                        # @show new_energy
-                        # println()
                         if (top_floor, bottom_floor, hallway) ∉ visited &&
                            (!haskey(queue,
                             (top_floor, bottom_floor, hallway)) ||
@@ -205,10 +196,6 @@ function part2()
         (floors, hallway), energy = dequeue_pair!(queue)
         push!(visited, (deepcopy(floors), copy(hallway)))
 
-        # show_big_map(hallway, floors)
-        # @show energy
-        # println()
-        # readline()
         if all(==([1, 2, 3, 4]), floors) &&
            all(==(0), hallway)
             return energy
@@ -265,15 +252,10 @@ function part2()
                     end
 
                     if taken_floor[pod_ind] == 0
-                        # println("Putting into hole")
-                        # @show i, pod_ind
                         new_energy = energy +
                                      (depth + abs(room_ind - i)) *
                                      10^(pod_ind - 1)
                         taken_floor[pod_ind] = pod_ind
-                        # show_map(hallway, top_floor, bottom_floor)
-                        # @show new_energy
-                        # println()
                         if (floors, hallway) ∉ visited &&
                            (!haskey(queue, (floors, hallway)) ||
                             new_energy <
