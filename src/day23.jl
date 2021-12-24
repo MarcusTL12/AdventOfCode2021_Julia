@@ -243,7 +243,7 @@ function part2()
                 hallway[i] = 0
                 if all(hallway[j] == 0
                        for j in i:sign(room_ind - i):room_ind) &&
-                        all(f[pod_ind] ∈ (0, pod_ind) for f in floors)
+                   all(f[pod_ind] ∈ (0, pod_ind) for f in floors)
                     depth = 4
                     taken_floor = floors[4]
                     while taken_floor[pod_ind] != 0 && depth > 1
