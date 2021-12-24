@@ -76,8 +76,11 @@ function fancy_func(z, a, b, c, d)
     end
 
     if x != d
-        z = 26 * z + d + b
+        println("In ", c)
+        return 26 * z + d + b
     end
+
+    println("Out ", c)
 
     z
 end
@@ -91,8 +94,25 @@ function fancy_func2(z, a, b, c, d)
     z3.If(x != d, 26 * z + d + b, z)
 end
 
-function part1()
+function run_through_num(n)
     a, b, c = find_parameters("input/day24/input")
+    z = 0
+    d = reverse!([
+        begin
+            x = n % 10
+            n ÷= 10
+            x
+        end for _ in 1:14
+    ])
+
+    for i in 1:14
+        z = fancy_func(z, a[i], b[i], c[i], d[i])
+        @show z
+    end
+end
+
+function part1()
+    a, b, c = find_parameters("input/day24/input_sander")
 
     d = [z3.Int("d$i") for i in 1:14]
 
@@ -147,4 +167,35 @@ function part2()
         n = 10n + m.__getitem__(di).as_long()
     end
     n
+end
+
+function rec(z, i, a, b, c, n, rev)
+    if i > 14
+        return z == 0 ? n : nothing
+    end
+    if c[i]
+        d = (z % 26) + a[i]
+        if 1 <= d <= 9
+            rec(z ÷ 26, i + 1, a, b, c, n * 10 + d, rev)
+        end
+    else
+        for d in (rev ? (1:9) : (9:-1:1))
+            res = rec(26z + b[i] + d, i + 1, a, b, c, 10 * n + d, rev)
+            if !isnothing(res)
+                return res
+            end
+        end
+    end
+end
+
+function part1_smart()
+    a, b, c = find_parameters("input/day24/input")
+
+    rec(0, 1, a, b, c, 0, false)
+end
+
+function part2_smart()
+    a, b, c = find_parameters("input/day24/input")
+
+    rec(0, 1, a, b, c, 0, true)
 end
